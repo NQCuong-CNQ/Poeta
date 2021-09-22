@@ -20,4 +20,4 @@ app.options('*', cors())
 app.use(express.static("public"))
 app.use('/', mainRoute)
 
-server.listen(80)
+server.listen(443)
