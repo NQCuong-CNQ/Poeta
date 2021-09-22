@@ -3,7 +3,7 @@ const express = require("express")
 const app = express()
 var cors = require('cors')
 const https = require("https")
-
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 var mainRoute = require('./routers/main-router')
 
 var server = https.createServer({
@@ -31,5 +31,33 @@ app.use(function (req, res, next) {
     next()
   }
 })
+
+
+main()
+async function main() {
+  let result = await makeRequest("GET", 'https://www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata')
+  console.log(result)
+}
+
+
+
+async function makeRequest(method, url) {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === xhr.DONE) {
+        let status = xhr.status
+        if (status === 0 || (status >= 200 && status < 400)) {
+          resolve(xhr.responseText)
+        }
+        else if (status === 404) {
+          resolve(0)
+        }
+      }
+    }
+    xhr.send()
+  })
+}
 
 server.listen(443)
