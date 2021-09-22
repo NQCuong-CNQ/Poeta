@@ -15,10 +15,21 @@ var server = https.createServer({
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/public/views/')
 
-app.use(cors())
-app.options('*', cors())
+
 
 app.use(express.static("public"))
 app.use('/', mainRoute)
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header('Access-Control-Allow-Methods', '*')
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  if ('OPTIONS' == req.method) {
+    res.sendStatus(200)
+  }
+  else {
+    next()
+  }
+})
 
 server.listen(443)
