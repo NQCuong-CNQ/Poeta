@@ -22,7 +22,7 @@
     text-align: center;
 }
 
-#meals-table thead{
+#meals-table thead {
     background-color: #41464b;
     color: white;
 }
@@ -36,8 +36,6 @@
 .edit-container span {
     padding: 0 5px;
 }
-
-.edit-container a {}
 
 .edit-container a:hover {
     color: blue !important;

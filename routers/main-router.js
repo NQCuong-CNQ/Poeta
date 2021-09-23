@@ -3,7 +3,7 @@ var router = express.Router()
 var mainController = require('../controllers/main-controller')
 
 router.get("/", function (req, res) {
-    res.render("index", {title: 'Home Page'})
+    res.render("index", { title: 'Home' })
 })
 
 router.get("/get-meals", mainController.getMeals)

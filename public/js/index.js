@@ -1,3 +1,7 @@
+//************************************
+// Description: trigger when click on edit, show edit modal and set text
+// Parameter: mealName, count
+//************************************
 onEdit = (mealName, count) => {
     $('#edit-modal').modal('show')
     $('#edit-modal #edit-input').val(mealName)
@@ -5,6 +9,10 @@ onEdit = (mealName, count) => {
     $('#edit-modal #edit-count').text(`The count is ${count}`)
 }
 
+//************************************
+// Description: trigger when click on delete, show delete modal and set text
+// Parameter: mealName, count
+//************************************
 onDelete = (mealName, count) => {
     $('#delete-modal').modal('show')
     $('#delete-modal #delete-meal-name').text(mealName)
@@ -12,7 +20,11 @@ onDelete = (mealName, count) => {
 
 }
 
-updateTable = (data) => {
+//************************************
+// Description: empty the table and loop for append each table row 
+// Parameter: data
+//************************************
+updateTable = data => {
     $('#meals-table-body').empty()
     for (let i = 0; i < data.length; i++) {
         $('#meals-table-body').append(`
@@ -26,6 +38,11 @@ updateTable = (data) => {
     }
 }
 
+//************************************
+// Description: trigger when click update button, check if the input is blank then show alert
+// if not, call ajax to server to update the meals, update table and hide modal when completed
+// Parameter: 
+//************************************
 $('#update-btn').on('click', () => {
     let newInput = $('#edit-modal #edit-input').val().trim()
     if (newInput == "") {
@@ -56,6 +73,11 @@ $('#update-btn').on('click', () => {
     }
 })
 
+//************************************
+// Description: trigger when click delete button, check if the input is blank then show alert
+// if not, call ajax to server to delete the meals, update table and hide modal when completed
+// Parameter: 
+//************************************
 $('#delete-btn').on('click', () => {
     try {
         $.ajax({
@@ -64,7 +86,6 @@ $('#delete-btn').on('click', () => {
             contentType: "application/json",
             dataType: "json",
             success: function (data) {
-
                 updateTable(data.data)
                 $('#delete-modal').modal('hide')
             },
@@ -77,6 +98,10 @@ $('#delete-btn').on('click', () => {
     }
 })
 
+//************************************
+// Description: run on load js, call ajax to server to get all meals, update table when completed 
+// Parameter: 
+//************************************
 try {
     $.ajax({
         url: '/get-meals',
@@ -95,6 +120,11 @@ try {
     console.log(err)
 }
 
+//************************************
+// Description: trigger when click add-new button, check if the input is blank then show alert
+// if not, call ajax to server to add the meals, update table and hide modal when completed
+// Parameter: 
+//************************************
 $('#add-new-btn').on('click', () => {
     let newInput = $('#add-new-input').val().trim()
     if (newInput == "") {
