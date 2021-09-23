@@ -99,7 +99,7 @@ try {
 $('#add-new-btn').on('click', () => {
     let newInput = $('#add-new-input').val().trim()
     if (newInput == "") {
-        alert('asfd')
+        alert('The field can not be blank!')
     } else {
         try {
             $.ajax({
