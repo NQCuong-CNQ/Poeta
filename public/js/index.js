@@ -81,7 +81,7 @@ $('#update-btn').on('click', () => {
 //************************************
 $('#delete-btn').on('click', () => {
     try {
-        let mealName = $('#delete-modal #delete-meal-name').text().capitalize()
+        let mealName = $('#delete-modal #delete-meal-name').text()
         $.ajax({
             url: '/delete-meals' + '?' + $.param({ mealName: mealName }),
             type: "delete",
@@ -129,7 +129,6 @@ try {
 //************************************
 $('#add-new-btn').on('click', () => {
     let newInput = $('#add-new-input').val().trim().capitalize()
-    console.log(newInput)
     if (newInput == "") {
         alert('The field can not be blank!')
     } else {
