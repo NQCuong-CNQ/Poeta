@@ -61,7 +61,7 @@ $('#update-btn').on('click', () => {
                         alert("Can't find this " + newInput)
                     } else {
                         updateTable(data.data)
-                        $('#add-new-modal').modal('hide')
+                        $('#edit-modal').modal('hide')
                     }
                 },
                 error: (jqXHR, textStatus, errorThrown) => {
@@ -112,7 +112,6 @@ try {
         dataType: "json",
         success: function (data) {
             updateTable(data.data)
-            $('#upadte-modal').modal('hide')
         },
         error: (jqXHR, textStatus, errorThrown) => {
             console.log(jqXHR, textStatus, errorThrown)
