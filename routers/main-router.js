@@ -7,5 +7,8 @@ router.get("/", function (req, res) {
 })
 
 router.get("/get-meals", mainController.getMeals)
+router.get("/add-meals", mainController.addMeals)
+router.post("/update-meals", mainController.updateMeals)
+router.delete("/delete-meals", mainController.deleteMeals)
 
 module.exports = router

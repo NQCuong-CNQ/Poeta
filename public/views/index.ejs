@@ -2,37 +2,103 @@
 <html lang="en">
 
 <head>
-
     <link rel="stylesheet" type="text/css" href="vendors/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/app.css" />
+
 </head>
 
 <body>
+    <div class="wrapper">
+        <div class="container">
+            <button type="button" class="btn btn-outline-primary mb-3" data-bs-toggle="modal"
+                data-bs-target="#add-new-modal">
+                Add new
+            </button>
 
-    <button>Add new</button>
+            <div>
+                <table class="table table-striped table-hover table-bordered" id="meals-table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="col-no">No</th>
+                            <th scope="col">Meal</th>
+                            <th scope="col">Count</th>
+                            <th scope="col" class="col-edit"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="meals-table-body">
 
-    <div>
-        <table class="meals-table">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Meal</th>
-                    <th scope="col">Count</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add-new-modal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add new</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <label for="add-new-input" class="col-form-label">input the meal name will
+                            count:</label>
+                        <input type="text" class="form-control" id="add-new-input">
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="add-new-btn" type="button" class="btn btn-outline-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit meal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="text" class="form-control" id="edit-input">
+                        <p id="edit-count">The count is</p>
+                        <p id="old-meal" class="d-none"></p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="update-btn" type="button" class="btn btn-outline-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="delete-meal-name" class="d-none"></p>
+                    <p id="delete-meal-ask"></p>
+                </div>
+                <div class="modal-footer">
+                    <button id="delete-btn" type="button" class="btn btn-outline-primary">Delete</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript" src="vendors/jquery/js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/app.js?v=1.1"></script>
+    <script type="text/javascript" src="js/index.js?v=1.1"></script>
     <script type="text/javascript" src="vendors/bootstrap/js/bootstrap.min.js"></script>
 
 </body>
