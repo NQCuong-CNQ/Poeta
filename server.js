@@ -2,21 +2,17 @@ const fs = require('fs')
 const express = require("express")
 const app = express()
 // var cors = require('cors')
-// const https = require("https")
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
+const https = require("https")
+// var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 var mainRoute = require('./routers/main-router')
 
-// var server = https.createServer({
-//   cert: fs.readFileSync("./ssl/fullchain.pem"),
-//   key: fs.readFileSync("./ssl/privkey.pem"),
-// }, app)
-
-
+var server = https.createServer({
+  cert: fs.readFileSync("./ssl/fullchain.pem"),
+  key: fs.readFileSync("./ssl/privkey.pem"),
+}, app)
 
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/public/views/')
-
-
 
 app.use(express.static("public"))
 app.use('/', mainRoute)
@@ -33,13 +29,4 @@ app.use(function (req, res, next) {
   }
 })
 
-// var server = http.createServer(app)
-
-// main()
-// async function main() {
-  
-// }
-
-
-
-app.listen(80)
+server.listen(80)
