@@ -29,7 +29,7 @@ updateTable = (data) => {
 $('#update-btn').on('click', () => {
     let newInput = $('#edit-modal #edit-input').val().trim()
     if (newInput == "") {
-        alert('asfd')
+        alert('The field can not be blank!')
     } else {
         try {
             $.ajax({
@@ -37,15 +37,14 @@ $('#update-btn').on('click', () => {
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
-                // data: ,
-                // {
-                //     mealName: newInput,
-                //     oldMeal: $('#edit-modal #old-meal').text(),
-                // },
-                success: function (data) {
 
-                    updateTable(data.data)
-                    $('#edit-modal').modal('hide')
+                success: function (data) {
+                    if (data.status == 0) {
+                        alert("Can't find this " + newInput)
+                    } else {
+                        updateTable(data.data)
+                        $('#add-new-modal').modal('hide')
+                    }
                 },
                 error: (jqXHR, textStatus, errorThrown) => {
                     console.log(jqXHR, textStatus, errorThrown)
@@ -111,10 +110,8 @@ $('#add-new-btn').on('click', () => {
                     mealName: newInput,
                 },
                 success: function (data) {
-                    console.log(data)
                     if (data.status == 0) {
                         alert("Can't find this " + newInput)
-                        console.log('ádfấdf')
                     } else {
                         updateTable(data.data)
                         $('#add-new-modal').modal('hide')

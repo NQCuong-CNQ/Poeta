@@ -60,19 +60,13 @@ module.exports.updateMeals = async function (req, res) {
     try {
         let mealName = req.query.mealName
         let oldName = req.query.oldMeal
-        // console.log(mealName)
         let response = await makeRequest("GET", `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(mealName)}`)
-        // console.log('response')
         let result = JSON.parse(response)
-        // console.log(response)
         if (result.meals == null) {
-
-            console.log('ádfsdf')
             res.send({
                 status: 0,
                 data: null,
             })
-            console.log('ádfsdf')
             return
         }
 
