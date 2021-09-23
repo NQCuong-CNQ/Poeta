@@ -48,9 +48,10 @@ $('#update-btn').on('click', () => {
     if (newInput == "") {
         alert('The field can not be blank!')
     } else {
+        let oldMeal = $('#edit-modal #old-meal').text().capitalize()
         try {
             $.ajax({
-                url: '/update-meals' + '?' + $.param({ mealName: newInput, oldMeal: $('#edit-modal #old-meal').text() }),
+                url: '/update-meals' + '?' + $.param({ mealName: newInput, oldMeal: oldMeal }),
                 type: "post",
                 contentType: "application/json",
                 dataType: "json",
@@ -80,8 +81,9 @@ $('#update-btn').on('click', () => {
 //************************************
 $('#delete-btn').on('click', () => {
     try {
+        let mealName = $('#delete-modal #delete-meal-name').text().capitalize()
         $.ajax({
-            url: '/delete-meals' + '?' + $.param({ "mealName": $('#delete-modal #delete-meal-name').text() }),
+            url: '/delete-meals' + '?' + $.param({ mealName: mealName }),
             type: "delete",
             contentType: "application/json",
             dataType: "json",
@@ -126,7 +128,7 @@ try {
 // Parameter: 
 //************************************
 $('#add-new-btn').on('click', () => {
-    let newInput = $('#add-new-input').val().trim()
+    let newInput = $('#add-new-input').val().trim().capitalize()
     if (newInput == "") {
         alert('The field can not be blank!')
     } else {
@@ -158,3 +160,10 @@ $('#add-new-btn').on('click', () => {
     }
 })
 
+//************************************
+// Description: A prototype for capitalize text
+// Parameter: 
+//************************************
+String.prototype.capitalize = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
