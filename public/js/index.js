@@ -129,6 +129,7 @@ try {
 //************************************
 $('#add-new-btn').on('click', () => {
     let newInput = $('#add-new-input').val().trim().capitalize()
+    console.log(newInput)
     if (newInput == "") {
         alert('The field can not be blank!')
     } else {
