@@ -6,8 +6,8 @@ var selectedMeals
 // Parameter: mealName, count
 //************************************
 onEdit = (mealName, count) => {
-    $('#edit-modal').modal('show')
     selectedMeals = mealName
+    $('#edit-modal').modal('show')
     $('#edit-modal #edit-input').val(mealName)
     $('#edit-modal #edit-count').text(`The count is ${count}`)
 }
@@ -17,6 +17,7 @@ onEdit = (mealName, count) => {
 // Parameter: mealName, count
 //************************************
 onDelete = (mealName, count) => {
+    selectedMeals = mealName
     $('#delete-modal').modal('show')
     $('#delete-modal #delete-meal-ask').text(`Are you want to delete "${mealName}" with the count is ${count}?`)
 }
@@ -45,7 +46,7 @@ updateTable = data => {
 // Parameter: 
 //************************************
 $('#update-btn').on('click', () => {
-    let mealsName = $('#edit-modal #edit-input').val().trim()
+    let mealsName = $('#edit-modal #edit-input').val().trim().capitalize()
     if (mealsName == "") {
         alert('The input field can not be blank!')
     } else {
@@ -83,9 +84,8 @@ $('#update-btn').on('click', () => {
 //************************************
 $('#delete-btn').on('click', () => {
     try {
-        let mealsName = $('#delete-modal #delete-meal-name').text().trim()
         saveData = saveData.filter(meal => {
-            return meal.mealsName != mealsName
+            return meal.mealsName != selectedMeals
         })
         updateTable(saveData)
         $('#delete-modal').modal('hide')
