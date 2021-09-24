@@ -1,11 +1,14 @@
+var saveData = []
+var selectedMeals
+
 //************************************
 // Description: trigger when click on edit, show edit modal and set text
 // Parameter: mealName, count
 //************************************
 onEdit = (mealName, count) => {
     $('#edit-modal').modal('show')
+    selectedMeals = mealName
     $('#edit-modal #edit-input').val(mealName)
-    $('#edit-modal #old-meal').text(mealName)
     $('#edit-modal #edit-count').text(`The count is ${count}`)
 }
 
@@ -15,9 +18,7 @@ onEdit = (mealName, count) => {
 //************************************
 onDelete = (mealName, count) => {
     $('#delete-modal').modal('show')
-    $('#delete-modal #delete-meal-name').text(mealName)
     $('#delete-modal #delete-meal-ask').text(`Are you want to delete "${mealName}" with the count is ${count}?`)
-
 }
 
 //************************************
@@ -30,9 +31,9 @@ updateTable = data => {
         $('#meals-table-body').append(`
         <tr>
             <th scope="row">${i + 1}</th>
-            <td>${data[i].mealName}</td>
+            <td>${data[i].mealsName}</td>
             <td>${data[i].count}</td>
-            <td><div class="edit-container"><a onclick="onEdit('${data[i].mealName}',${data[i].count})">Edit</a><span>|</span><a onclick="onDelete('${data[i].mealName}',${data[i].count})">Delete</a></div></td>
+            <td><div class="edit-container"><a onclick="onEdit('${data[i].mealsName}',${data[i].count})">Edit</a><span>|</span><a onclick="onDelete('${data[i].mealsName}',${data[i].count})">Delete</a></div></td>
         </tr>
         `)
     }
@@ -44,23 +45,24 @@ updateTable = data => {
 // Parameter: 
 //************************************
 $('#update-btn').on('click', () => {
-    let newInput = $('#edit-modal #edit-input').val().trim()
-    if (newInput == "") {
-        alert('The field can not be blank!')
+    let mealsName = $('#edit-modal #edit-input').val().trim()
+    if (mealsName == "") {
+        alert('The input field can not be blank!')
     } else {
-        let oldMeal = $('#edit-modal #old-meal').text().capitalize()
         try {
             $.ajax({
-                url: '/update-meals' + '?' + $.param({ mealName: newInput, oldMeal: oldMeal }),
-                type: "post",
-                contentType: "application/json",
+                url: `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(mealsName)}`,
+                type: "get",
+                crossDomain: true,
                 dataType: "json",
-
-                success: function (data) {
-                    if (data.status == 0) {
-                        alert("Can't find this " + newInput)
+                success: function (response) {
+                    if (response.meals === null) {
+                        alert("Can't find this " + mealsName)
                     } else {
-                        updateTable(data.data)
+                        let objIndex = saveData.findIndex(meal => meal.mealsName === selectedMeals)
+                        saveData[objIndex].mealsName = mealsName
+                        saveData[objIndex].count = response.meals.length
+                        updateTable(saveData)
                         $('#edit-modal').modal('hide')
                     }
                 },
@@ -81,73 +83,52 @@ $('#update-btn').on('click', () => {
 //************************************
 $('#delete-btn').on('click', () => {
     try {
-        let mealName = $('#delete-modal #delete-meal-name').text()
-        $.ajax({
-            url: '/delete-meals' + '?' + $.param({ mealName: mealName }),
-            type: "delete",
-            contentType: "application/json",
-            dataType: "json",
-            success: function (data) {
-                updateTable(data.data)
-                $('#delete-modal').modal('hide')
-            },
-            error: (jqXHR, textStatus, errorThrown) => {
-                console.log(jqXHR, textStatus, errorThrown)
-            }
+        let mealsName = $('#delete-modal #delete-meal-name').text().trim()
+        saveData = saveData.filter(meal => {
+            return meal.mealsName != mealsName
         })
+        updateTable(saveData)
+        $('#delete-modal').modal('hide')
     } catch (err) {
         console.log(err)
     }
 })
 
-//************************************
-// Description: run on load js, call ajax to server to get all meals, update table when completed 
-// Parameter: 
-//************************************
-try {
-    $.ajax({
-        url: '/get-meals',
-        type: "get",
-        contentType: "application/json",
-        dataType: "json",
-        success: function (data) {
-            updateTable(data.data)
-        },
-        error: (jqXHR, textStatus, errorThrown) => {
-            console.log(jqXHR, textStatus, errorThrown)
-        }
-    })
-} catch (err) {
-    console.log(err)
-}
 
 //************************************
 // Description: trigger when click add-new button, check if the input is blank then show alert
 // if not, call ajax to server to add the meals, update table and hide modal when completed
 // Parameter: 
 //************************************
-$('#add-new-btn').on('click', () => {
-    let newInput = $('#add-new-input').val().trim().capitalize()
-    if (newInput == "") {
-        alert('The field can not be blank!')
-    } else {
+$('#add-new-btn').on('click', async () => {
+    let mealsName = $('#add-new-input').val().trim().capitalize()
+    let mealsObj
+    if (mealsName == "") {
+        alert('The input field can not be blank!')
+    }
+    else if (saveData.find(name => name.mealsName === mealsName)) {
+        alert(`"${mealsName}" is already in the table!`)
+    }
+    else {
         try {
             $.ajax({
-                url: '/add-meals',
+                url: `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(mealsName)}`,
                 type: "get",
-                contentType: "application/json",
+                crossDomain: true,
                 dataType: "json",
-                data: {
-                    mealName: newInput,
-                },
-                success: function (data) {
-                    if (data.status == 0) {
-                        alert("Can't find this " + newInput)
+                success: function (response) {
+                    if (response.meals === null) {
+                        alert("Can't find this " + mealsName)
                     } else {
-                        updateTable(data.data)
+
+                        mealsObj = new Object()
+                        mealsObj.mealsName = mealsName
+                        mealsObj.count = response.meals.length
+                        saveData.push(mealsObj)
+
+                        updateTable(saveData)
                         $('#add-new-modal').modal('hide')
                     }
-
                 },
                 error: (jqXHR, textStatus, errorThrown) => {
                     console.log(jqXHR, textStatus, errorThrown)
