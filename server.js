@@ -1,16 +1,16 @@
 const fs = require('fs')
 const express = require("express")
 const app = express()
-// const https = require("https")
-const http = require("http")
+const https = require("https")
+// const http = require("http")
 
 //create server using certificate
-// var server = https.createServer({
-//   cert: fs.readFileSync("./ssl/fullchain.pem"),
-//   key: fs.readFileSync("./ssl/privkey.pem"),
-// }, app)
+var server = https.createServer({
+  cert: fs.readFileSync("./ssl/fullchain.pem"),
+  key: fs.readFileSync("./ssl/privkey.pem"),
+}, app)
 
-var server = http.createServer(app)
+// var server = http.createServer(app)
 
 //using ejs view engine
 app.set('view engine', 'ejs')
@@ -24,4 +24,4 @@ app.get("/", function (req, res) {
 })
 
 //listen on port 443 to run ssl
-server.listen(80)
+server.listen(443)
