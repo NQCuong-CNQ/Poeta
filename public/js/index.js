@@ -114,12 +114,12 @@ $('#delete-btn').on('click', () => {
 //************************************
 addNewData = (response, mealsName) => {
     let mealsObj
-    if (response.meals === null) {
+    if (response === null) {
         alert("Can't find this " + mealsName)
     } else {
         mealsObj = new Object()
         mealsObj.mealsName = mealsName
-        mealsObj.count = response.meals.length
+        mealsObj.count = response.length
         saveData.push(mealsObj)
 
         updateTable(saveData)
@@ -149,7 +149,7 @@ $('#add-new-btn').on('click', async () => {
                 crossDomain: true,
                 dataType: "json",
                 success: function (response) {
-                    addNewData(response.meals)
+                    addNewData(response.meals, mealsName)
                 },
                 error: (jqXHR, textStatus, errorThrown) => {
                     console.log(jqXHR, textStatus, errorThrown)
