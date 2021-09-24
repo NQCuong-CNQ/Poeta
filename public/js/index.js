@@ -3,7 +3,8 @@ var selectedMeals
 
 //************************************
 // Description: trigger when click on edit, show edit modal and set text
-// Parameter: mealName, count
+// Input: mealName, count
+// Ouput:
 //************************************
 onEdit = (mealName, count) => {
     selectedMeals = mealName
@@ -14,7 +15,8 @@ onEdit = (mealName, count) => {
 
 //************************************
 // Description: trigger when click on delete, show delete modal and set text
-// Parameter: mealName, count
+// Input: mealName, count
+// Ouput:
 //************************************
 onDelete = (mealName, count) => {
     selectedMeals = mealName
@@ -24,7 +26,8 @@ onDelete = (mealName, count) => {
 
 //************************************
 // Description: empty the table and loop for append each table row 
-// Parameter: data
+// Input: data
+// Ouput:
 //************************************
 updateTable = data => {
     $('#meals-table-body').empty()
@@ -41,9 +44,27 @@ updateTable = data => {
 }
 
 //************************************
+// Description: check if response has value, find index of mealsName on data, update that value and update table, hide modal
+// Input: response, mealsName
+// Ouput:
+//************************************
+updateData = (response, mealsName) => {
+    if (response === null) {
+        alert("Can't find this " + mealsName)
+    } else {
+        let objIndex = saveData.findIndex(meal => meal.mealsName === selectedMeals)
+        saveData[objIndex].mealsName = mealsName
+        saveData[objIndex].count = response.length
+        updateTable(saveData)
+        $('#edit-modal').modal('hide')
+    }
+}
+
+//************************************
 // Description: trigger when click update button, check if the input is blank then show alert
-// if not, call ajax to server to update the meals, update table and hide modal when completed
-// Parameter: 
+// if not, call ajax to API to get the new meals, call updateData function
+// Input: 
+// Ouput:
 //************************************
 $('#update-btn').on('click', () => {
     let mealsName = $('#edit-modal #edit-input').val().trim().capitalize()
@@ -57,15 +78,7 @@ $('#update-btn').on('click', () => {
                 crossDomain: true,
                 dataType: "json",
                 success: function (response) {
-                    if (response.meals === null) {
-                        alert("Can't find this " + mealsName)
-                    } else {
-                        let objIndex = saveData.findIndex(meal => meal.mealsName === selectedMeals)
-                        saveData[objIndex].mealsName = mealsName
-                        saveData[objIndex].count = response.meals.length
-                        updateTable(saveData)
-                        $('#edit-modal').modal('hide')
-                    }
+                    updateData(response.meals, mealsName)
                 },
                 error: (jqXHR, textStatus, errorThrown) => {
                     console.log(jqXHR, textStatus, errorThrown)
@@ -78,9 +91,9 @@ $('#update-btn').on('click', () => {
 })
 
 //************************************
-// Description: trigger when click delete button, check if the input is blank then show alert
-// if not, call ajax to server to delete the meals, update table and hide modal when completed
-// Parameter: 
+// Description: trigger when click delete button, filer data when its not contain selected meal, update table and hide modal 
+// Input: 
+// Ouput:
 //************************************
 $('#delete-btn').on('click', () => {
     try {
@@ -94,15 +107,34 @@ $('#delete-btn').on('click', () => {
     }
 })
 
+//************************************
+// Description: check if response has value, create an object and store in data, update table and hide modal
+// Input: response, mealsName
+// Ouput:
+//************************************
+addNewData = (response, mealsName) => {
+    let mealsObj
+    if (response.meals === null) {
+        alert("Can't find this " + mealsName)
+    } else {
+        mealsObj = new Object()
+        mealsObj.mealsName = mealsName
+        mealsObj.count = response.meals.length
+        saveData.push(mealsObj)
+
+        updateTable(saveData)
+        $('#add-new-modal').modal('hide')
+    }
+}
 
 //************************************
 // Description: trigger when click add-new button, check if the input is blank then show alert
-// if not, call ajax to server to add the meals, update table and hide modal when completed
-// Parameter: 
+// if not, call ajax to API to get the meals, count the response, save data, update table and hide modal when completed
+// Input: 
+// Ouput:
 //************************************
 $('#add-new-btn').on('click', async () => {
     let mealsName = $('#add-new-input').val().trim().capitalize()
-    let mealsObj
     if (mealsName == "") {
         alert('The input field can not be blank!')
     }
@@ -117,18 +149,7 @@ $('#add-new-btn').on('click', async () => {
                 crossDomain: true,
                 dataType: "json",
                 success: function (response) {
-                    if (response.meals === null) {
-                        alert("Can't find this " + mealsName)
-                    } else {
-
-                        mealsObj = new Object()
-                        mealsObj.mealsName = mealsName
-                        mealsObj.count = response.meals.length
-                        saveData.push(mealsObj)
-
-                        updateTable(saveData)
-                        $('#add-new-modal').modal('hide')
-                    }
+                    addNewData(response.meals)
                 },
                 error: (jqXHR, textStatus, errorThrown) => {
                     console.log(jqXHR, textStatus, errorThrown)
@@ -142,8 +163,9 @@ $('#add-new-btn').on('click', async () => {
 
 //************************************
 // Description: A prototype for capitalize text
-// Parameter: 
+// Input: 
+// Ouput: 
 //************************************
 String.prototype.capitalize = function () {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+    return this.charAt(0).toUpperCase() + this.slice(1)
 }
